@@ -1,9 +1,17 @@
+
+package com.czh.utils;
+
+import com.czh.Equation;
+
+/**
+ * @author chenzhuohong
+ */
 public class EquationUtils {
 
     /**
      * 构建四则运算方程
      * @param maxNum 方程内包含的最大的运算数
-     * @return Equation
+     * @return com.czh.Equation
      */
     public static Equation buildEquation(int maxNum){
         Equation equation = new Equation();
@@ -16,15 +24,15 @@ public class EquationUtils {
             //方程最开始push运算数
             //之后每push一个运算数，就push一个运算符
             if( index % 2 == 0 ){
-                equation.push(String.valueOf(RandomUtils.randomInt(maxNum)));
+                    equation.addLast(String.valueOf(RandomUtils.randomInt(maxNum)));
+//                }
             }else{
                 //没有引入括号
-                //没有解决连续除法
                 //没有解决减法结果大于0
-                equation.push(RandomUtils.randomOperator());
+                equation.addLast(RandomUtils.randomOperator());
             }
         }
-        equation.push("=");
+        equation.addLast("=");
         return equation;
     }
 
@@ -37,11 +45,4 @@ public class EquationUtils {
         return false;
     }
 
-    /**
-     * 计算四则运算方程
-     * @return 计算结果可能为分数，用字符串表示
-     */
-    public static String calculate(){
-        return null;
-    }
 }

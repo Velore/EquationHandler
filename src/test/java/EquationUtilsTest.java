@@ -1,5 +1,10 @@
+import com.czh.Equation;
 import org.junit.Test;
+import com.czh.utils.EquationUtils;
 
+/**
+ * @author chenzhuohong
+ */
 public class EquationUtilsTest {
 
     @Test

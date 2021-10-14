@@ -1,3 +1,8 @@
+package com.czh.utils;
+
+/**
+ * @author chenzhuohong
+ */
 public class RandomUtils {
 
     /**
@@ -14,7 +19,7 @@ public class RandomUtils {
      * @return String 运算符
      */
     public static String randomOperator(){
-        String[] operatorList = {"+", "-", "*", "/"};
+        String[] operatorList = {"+", "-", "×", "÷"};
         return operatorList[(int)(Math.random()*4)];
     }
 

@@ -1,4 +1,5 @@
 import org.junit.Test;
+import com.czh.utils.RandomUtils;
 
 public class RandomUtilsTest {
 
