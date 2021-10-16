@@ -10,14 +10,14 @@ public class EquationUtilsTest {
     @Test
     public void buildEquationTest(){
         Equation equation = EquationUtils.buildEquation(10);
-        System.out.println(equation);
+        System.out.println(equation + "->" +equation.getAnswer());
     }
 
     @Test
     public void buildEquationTest2(){
         for(int i = 0;i<10;i++){
             Equation equation = EquationUtils.buildEquation(10);
-            System.out.println(equation);
+            System.out.println(equation + "->" +equation.getAnswer());
         }
     }
 }

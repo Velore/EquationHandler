@@ -43,11 +43,11 @@ public class CalculateUtilsTest {
 
     @Test
     public void calculateTest(){
-//        System.out.println(CalculateUtils.calculate("2'1/2÷1'3/4="));
-        for(int i = 0;i<10;i++){
-            Equation equation = EquationUtils.buildEquation(20);
-            System.out.println(equation + CalculateUtils.calculate(equation.toString()));
-        }
+        System.out.println(CalculateUtils.calculate("10 ÷ (14'3/5 + 4) - 12/13 ="));
+//        for(int i = 0;i<10;i++){
+//            Equation equation = EquationUtils.buildEquation(20);
+//            System.out.println(equation + CalculateUtils.calculate(equation.toString()));
+//        }
     }
 
     @Test

@@ -46,12 +46,12 @@ public class RandomUtils {
      */
     public static String randomNum(int n){
         assert n > 0 : "参数必须大于0";
-        //0:整数,1:真分数,2:带分数
-        int numType = (int)(Math.random()*3);
+        //0:真分数,1:带分数,3或4:整数
+        int numType = (int)(Math.random()*4);
         switch (numType){
-            case 1:
+            case 0:
                 return randomProperFraction(n);
-            case 2:
+            case 1:
                 return randomMixedFraction(n);
             default:
                 return String.valueOf(randomInt(n));

@@ -20,7 +20,7 @@ public class EquationUtils {
         //至少需要一个运算符和两个运算数才能生成括号
         if(size>=3){
             //只有在+和-上加括号才对算式有影响
-            if( "-".equals(list.get(size-2))|| "+".equals(list.get(size-2))){
+            if( " - ".equals(list.get(size-2))|| " + ".equals(list.get(size-2))){
                 //如果要添加括号的位置已经存在括号，则不做处理
                 if(")".equals(list.get(size-3)) || size == 3){
                     return list;
@@ -40,7 +40,7 @@ public class EquationUtils {
     public static void checkMinus(ArrayList<String> list){
         int index;
         for(index = 0;index<list.size();index++){
-            if("-".equals(list.get(index))){
+            if(" - ".equals(list.get(index))){
                 //区分a-b和(..a)-b
                 String leftN = (")".equals(list.get(index-1)))?list.get(index-2):list.get(index-1);
                 //区分a-b和a-(b..)
@@ -80,13 +80,12 @@ public class EquationUtils {
                     equation.addLast(RandomUtils.randomNum(maxNum));
                     equation.setElementList(EquationUtils.addBracket(equation.getElementList()));
             }else{
-                //没有引入括号
-                //没有解决减法结果大于0
-                equation.addLast(RandomUtils.randomOperator());
+                equation.addLast(" "+RandomUtils.randomOperator()+" ");
             }
         }
         checkMinus(equation.getElementList());
-        equation.addLast("=");
+        equation.addLast(" = ");
+        equation.setAnswer(CalculateUtils.calculate(equation.toString()));
         return equation;
     }
 

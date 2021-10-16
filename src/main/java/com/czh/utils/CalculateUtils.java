@@ -11,15 +11,16 @@ public class CalculateUtils {
     /**
      * 将字符串转换为逆波兰式
      * @param s 字符串
-     * @return 逆波兰式
+     * @return 逆波兰式String
      */
     public static String getPolishNotation(String s){
+        s = s.replaceAll(" ", "");
         ArrayList<String> list = new ArrayList<>();
         Stack<String> stack = new Stack<>();
         //s.length()-1是为了去掉方程末尾的"="
         for (int i=0;i<s.length()-1;){
-            //匹配运算数
-            if ((s.charAt(i)+"").matches("\\d")){
+            if (isInteger(s.charAt(i)+"")){
+                //匹配运算数
                 StringBuilder builder = new StringBuilder();
                 do{
                     builder.append(s.charAt(i));
@@ -117,30 +118,34 @@ public class CalculateUtils {
         //获取四则运算方程的逆波兰式
         String s = getPolishNotation(str);
         Stack<String> stack = new Stack<>();
-        for (int i = 0; i <s.length() ;) {
-            if ((s.charAt(i) + "").matches("\\d")){
-                // 运算数的处理
-                StringBuilder builder = new StringBuilder();
-                do{
-                    builder.append(s.charAt(i));
+        try{
+            for (int i = 0; i <s.length() ;) {
+                if ((s.charAt(i) + "").matches("\\d")){
+                    // 运算数的处理
+                    StringBuilder builder = new StringBuilder();
+                    do{
+                        builder.append(s.charAt(i));
+                        i++;
+                    }while (i<s.length() && !isOperator(s.charAt(i)));
+                    stack.push(builder.toString());
+                }else if ((s.charAt(i) + "").matches("[-+×÷]")){
+                    //运算符的处理
+                    String k1 = stack.pop();
+                    String k2 = stack.pop();
+                    // 计算结果
+                    String res = simpleCalculate(k2, k1, (s.charAt(i) + ""));
+                    stack.push(res+"");
                     i++;
-                }while (i<s.length() && !isOperator(s.charAt(i)));
-                stack.push(builder.toString());
-            }else if ((s.charAt(i) + "").matches("[-+×÷]")){
-                //运算符的处理
-                String k1 = stack.pop();
-                String k2 = stack.pop();
-                // 计算结果
-                String res = simpleCalculate(k2, k1, (s.charAt(i) + ""));
-                stack.push(res+"");
-                i++;
-            }else if("|".equals(s.charAt(i)+"")){
-                //对分隔符不做处理
-                i++;
+                }else if("|".equals(s.charAt(i)+"")){
+                    //对分隔符不做处理
+                    i++;
+                }
             }
-
+            return stack.pop();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        return stack.pop();
+        return "NaN";
     }
 
     /**
@@ -152,12 +157,13 @@ public class CalculateUtils {
     }
 
     /**
-     * 判断字符串是整数还是分数
+     * 判断字符串是否为纯数字组成
      * @param s String
-     * @return 是整数返回true
+     * @return 是则返回true
      */
     public static boolean isInteger(String s){
         for(int i = 0;i<s.length();i++){
+            //逐位检查
             if(!Character.isDigit(s.charAt(i))){
                 return false;
             }
