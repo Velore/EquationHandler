@@ -16,39 +16,68 @@ public class CalculateUtils {
     public static String getPolishNotation(String s){
         ArrayList<String> list = new ArrayList<>();
         Stack<String> stack = new Stack<>();
-        for (int i=0;i<s.length();i++){
+        //s.length()-1是为了去掉方程末尾的"="
+        for (int i=0;i<s.length()-1;){
+            //匹配运算数
             if ((s.charAt(i)+"").matches("\\d")){
-                list.add(s.charAt(i)+"");
-            }else if((s.charAt(i)+"").matches("[+-×÷]")){
-                //如果stack为空
+                StringBuilder builder = new StringBuilder();
+                do{
+                    builder.append(s.charAt(i));
+                    i++;
+                }while (i<s.length()-1 && !isOperator(s.charAt(i)));
+                list.add(builder.toString());
+            }else if((s.charAt(i)+"").matches("[-+×÷]")){
+                //匹配运算符
                 if (stack.isEmpty()){
                     stack.push(s.charAt(i)+"");
+                    i++;
                     continue;
                 }
-                //不为空
-
-                //上一个元素不为（，且当前运算符优先级小于上一个元素则，将比这个运算符优先级大的元素全部加入到队列中
-                while (!stack.isEmpty()&&!stack.lastElement().equals("(")&&!comparePriority(s.charAt(i)+"",stack.lastElement())){
+                //上一个元素不为"(",且当前运算符优先级小于上一个元素,则将比这个运算符优先级大的元素全部加入到队列中
+                while (!stack.isEmpty()&&!("(").equals(stack.lastElement())&&!comparePriority(s.charAt(i)+"",stack.lastElement())){
                     list.add(stack.pop());
                 }
                 stack.push(s.charAt(i)+"");
+                i++;
             }else if(s.charAt(i)=='('){
-                //遇到左小括号无条件加入
+                //遇到"("无条件加入
                 stack.push(s.charAt(i) + "");
+                i++;
             }else if(s.charAt(i)==')'){
-                //遇到右小括号，则寻找上一堆小括号，然后把中间的值全部放入队列中
+                //遇到")"，则寻找上一个"("，然后把中间的值全部放入队列中
                 while(!("(").equals(stack.lastElement())){
                     list.add(stack.pop());
                 }
                 //上述循环停止，这栈顶元素必为"("
                 stack.pop();
+                i++;
             }
         }
         //将栈中剩余元素加入到队列中
         while (!stack.isEmpty()){
             list.add(stack.pop());
         }
-        return list.toString();
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i<list.size(); i++){
+            if(i==list.size()-1){
+                builder.append(list.get(i));
+            }else {
+                builder.append(list.get(i)).append("|");
+            }
+        }
+        return builder.toString();
+    }
+
+    /**
+     * 对比两个数的大小
+     * @param s1 String运算数1
+     * @param s2 String运算数2
+     * @return s1>s2,返回true
+     */
+    public static boolean compareNum(String s1, String s2){
+        int[] l1 = splitFraction(s1);
+        int[] l2 = splitFraction(s2);
+        return l1[0]*l2[1] > l2[0]*l1[1];
     }
 
     /**
@@ -66,7 +95,7 @@ public class CalculateUtils {
      * @param str 运算符
      * @return int
      */
-    private static int getPriorityValue(String str) {
+    public static int getPriorityValue(String str) {
         switch(str.trim()){
             case "+":
             case "-":
@@ -81,22 +110,33 @@ public class CalculateUtils {
 
     /**
      * 计算四则运算方程
+     * @param str 四则运算方程
      * @return 计算结果可能为分数，用字符串表示
      */
     public static String calculate(String str){
+        //获取四则运算方程的逆波兰式
         String s = getPolishNotation(str);
         Stack<String> stack = new Stack<>();
-        for (int i = 0; i <s.length() ;i++) {
-            // 普通数值的处理
+        for (int i = 0; i <s.length() ;) {
             if ((s.charAt(i) + "").matches("\\d")){
-                stack.push(s.charAt(i) + "");
-                // + - * / 运算符的处理
-            }else if ((s.charAt(i) + "").matches("[+-×÷]")){
+                // 运算数的处理
+                StringBuilder builder = new StringBuilder();
+                do{
+                    builder.append(s.charAt(i));
+                    i++;
+                }while (i<s.length() && !isOperator(s.charAt(i)));
+                stack.push(builder.toString());
+            }else if ((s.charAt(i) + "").matches("[-+×÷]")){
+                //运算符的处理
                 String k1 = stack.pop();
                 String k2 = stack.pop();
                 // 计算结果
-                String res = simpleCalculate(k1, k2, (s.charAt(i) + ""));
+                String res = simpleCalculate(k2, k1, (s.charAt(i) + ""));
                 stack.push(res+"");
+                i++;
+            }else if("|".equals(s.charAt(i)+"")){
+                //对分隔符不做处理
+                i++;
             }
 
         }
@@ -107,22 +147,8 @@ public class CalculateUtils {
      * 是运算数还是运算符
      * @return 是运算数返回true
      */
-    public static boolean isNumber(String s){
-        for(int i = 0;i<s.length();i++){
-            if(String.valueOf(s.charAt(i)).equals("+")){
-                return false;
-            }
-            if(String.valueOf(s.charAt(i)).equals("-")){
-                return false;
-            }
-            if(String.valueOf(s.charAt(i)).equals("×")){
-                return false;
-            }
-            if(String.valueOf(s.charAt(i)).equals("÷")){
-                return false;
-            }
-        }
-        return true;
+    public static boolean isOperator(char c){
+        return c == '+' || c == '-' || c == '×' || c == '÷' || c == '(' || c == ')' || c == '|';
     }
 
     /**
@@ -227,7 +253,16 @@ public class CalculateUtils {
         }
         //计算分子和分母的最大公约数
         int maxFactor = CalculateUtils.getMaxFactor(result[0], result[1]);
-        return result[0] / maxFactor + "/" + result[1] / maxFactor;
+        //化简分子
+        result[0] /= maxFactor;
+        //化简分母
+        result[1] /= maxFactor;
+        if(result[0]>result[1]){
+            //分子大于分母,获取余数reminder
+            int reminder = result[0]%result[1];
+            return (result[0]-reminder)/result[1] + "'" + reminder + "/" + result[1] ;
+        }
+        return result[0] + "/" + result[1];
     }
 
     /**
@@ -289,14 +324,20 @@ public class CalculateUtils {
 
     /**
      * 除法
-     * @param m 除数
-     * @param n 被除数
+     * @param m 被除数
+     * @param n 除数
      * @return String
      */
     public static String divide(String m, String n){
+        if("0".equals(m)){
+            return "0";
+        }
+        if("0".equals(n)){
+            throw new IllegalArgumentException("除数不能为0");
+        }
         //两个运算数都是整数
         if(isInteger(m) && isInteger(n)){
-            return reduceFraction(m+"/"+n);
+            return reduceFraction(m + "/" + n);
         }
         int[] n1 = splitFraction(m);
         int[] n2 = splitFraction(n);

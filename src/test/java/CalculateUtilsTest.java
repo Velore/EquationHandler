@@ -1,8 +1,8 @@
 import com.czh.Equation;
-import com.czh.utils.EquationUtils;
-import org.junit.Test;
 import com.czh.utils.CalculateUtils;
+import com.czh.utils.EquationUtils;
 import com.czh.utils.RandomUtils;
+import org.junit.Test;
 
 import java.util.Arrays;
 
@@ -13,7 +13,10 @@ public class CalculateUtilsTest {
 
     @Test
     public void getPolishNotationTest(){
-        System.out.println(CalculateUtils.getPolishNotation("3×(6-4)+3"));
+        Equation equation = EquationUtils.buildEquation(9);
+        System.out.println(equation);
+        System.out.println(CalculateUtils.getPolishNotation(equation.toString()));
+//        System.out.println(CalculateUtils.getPolishNotation("3×(1'6/13-4/5)+3'2/3="));
     }
 
     @Test
@@ -25,7 +28,7 @@ public class CalculateUtilsTest {
 
     @Test
     public void splitFractionTest(){
-        System.out.println(Arrays.toString(CalculateUtils.splitFraction("3'11/34")));
+        System.out.println(Arrays.toString(CalculateUtils.splitFraction("2'3/5")));
     }
 
     @Test
@@ -40,9 +43,9 @@ public class CalculateUtilsTest {
 
     @Test
     public void calculateTest(){
+//        System.out.println(CalculateUtils.calculate("2'1/2÷1'3/4="));
         Equation equation = EquationUtils.buildEquation(7);
-        System.out.println(equation);
-        System.out.println(CalculateUtils.calculate(equation.toString()));
+        System.out.println(equation + CalculateUtils.calculate(equation.toString()));
     }
 
     @Test
@@ -57,6 +60,11 @@ public class CalculateUtilsTest {
             System.out.println(
                     num1 +operator + num2 + "=" + CalculateUtils.simpleCalculate(num1, num2, operator));
         }
+    }
+
+    @Test
+    public void reduceFractionTest(){
+        System.out.println(CalculateUtils.reduceFraction("24/7"));
     }
 
     @Test
@@ -76,6 +84,7 @@ public class CalculateUtilsTest {
 
     @Test
     public void divideTest(){
+        System.out.println(CalculateUtils.divide("3", "4"));
         System.out.println(CalculateUtils.divide("2'2/3", "4"));
         System.out.println(CalculateUtils.divide("1'2/3", "2'5/7"));
 
