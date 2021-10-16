@@ -15,18 +15,22 @@ public class Equation {
     /**
      * 四则运算方程
      */
-    private final ArrayList<String> elementList;
+    private ArrayList<String> elementList;
 
     public Equation(){
         this.elementList = new ArrayList<>();
     }
 
     /**
-     * 获取方程的元素栈
+     * 获取方程的元素List
      * @return ArrayList<String>
      */
     public ArrayList<String> getElementList(){
         return this.elementList;
+    }
+
+    public void setElementList(ArrayList<String> list){
+        this.elementList = list;
     }
 
     @Override
