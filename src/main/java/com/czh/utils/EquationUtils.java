@@ -6,6 +6,7 @@ import com.czh.Equation;
 import java.util.ArrayList;
 
 /**
+ * 对算式的处理工具类
  * @author chenzhuohong
  */
 public class EquationUtils {
@@ -18,9 +19,9 @@ public class EquationUtils {
     public static ArrayList<String> addBracket(ArrayList<String> list){
         int size = list.size();
         //至少需要一个运算符和两个运算数才能生成括号
-        if(size>=3){
+        if(size >= 3){
             //只有在+和-上加括号才对算式有影响
-            if( " - ".equals(list.get(size-2))|| " + ".equals(list.get(size-2))){
+            if("-".equals(list.get(size-2).trim())|| "+".equals(list.get(size-2).trim())){
                 //如果要添加括号的位置已经存在括号，则不做处理
                 if(")".equals(list.get(size-3)) || size == 3){
                     return list;
@@ -40,12 +41,12 @@ public class EquationUtils {
     public static void checkMinus(ArrayList<String> list){
         int index;
         for(index = 0;index<list.size();index++){
-            if(" - ".equals(list.get(index))){
+            if("-".equals(list.get(index).trim())){
                 //区分a-b和(..a)-b
                 String leftN = (")".equals(list.get(index-1)))?list.get(index-2):list.get(index-1);
                 //区分a-b和a-(b..)
                 String rightN = ("(".equals(list.get(index+1)))?list.get(index+2):list.get(index+1);
-                if(!CalculateUtils.compareNum(leftN, rightN)){
+                if(!ElementUtils.compareNum(leftN, rightN)){
                     if(")".equals(list.get(index-1))){
                         list.set(index-2, rightN);
                     }else{

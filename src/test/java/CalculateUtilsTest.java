@@ -1,5 +1,6 @@
 import com.czh.Equation;
 import com.czh.utils.CalculateUtils;
+import com.czh.utils.ElementUtils;
 import com.czh.utils.EquationUtils;
 import com.czh.utils.RandomUtils;
 import org.junit.Test;
@@ -21,14 +22,14 @@ public class CalculateUtilsTest {
 
     @Test
     public void isIntegerTest(){
-        System.out.println(CalculateUtils.isInteger("2'1/7"));
-        System.out.println(CalculateUtils.isInteger("1/2"));
-        System.out.println(CalculateUtils.isInteger("132472"));
+        System.out.println(ElementUtils.isInteger("2'1/7"));
+        System.out.println(ElementUtils.isInteger("1/2"));
+        System.out.println(ElementUtils.isInteger("132472"));
     }
 
     @Test
     public void splitFractionTest(){
-        System.out.println(Arrays.toString(CalculateUtils.splitFraction("2'3/5")));
+        System.out.println(Arrays.toString(ElementUtils.splitFraction("2'3/5")));
     }
 
     @Test
@@ -44,10 +45,6 @@ public class CalculateUtilsTest {
     @Test
     public void calculateTest(){
         System.out.println(CalculateUtils.calculate("10 ÷ (14'3/5 + 4) - 12/13 ="));
-//        for(int i = 0;i<10;i++){
-//            Equation equation = EquationUtils.buildEquation(20);
-//            System.out.println(equation + CalculateUtils.calculate(equation.toString()));
-//        }
     }
 
     @Test
@@ -66,7 +63,7 @@ public class CalculateUtilsTest {
 
     @Test
     public void reduceFractionTest(){
-        System.out.println(CalculateUtils.reduceFraction("24/7"));
+        System.out.println(ElementUtils.simplifyFraction("24/7"));
     }
 
     @Test

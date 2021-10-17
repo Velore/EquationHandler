@@ -18,11 +18,11 @@ public class AccessUtils {
      * @param readPath 文本路径
      * @return 算式list
      */
-    public static ArrayList<String> readEquation(String readPath){
+    public static ArrayList<String> read(String readPath){
         if(readPath == null){
             throw new NullPointerException("文本路径为空");
         }
-        ArrayList<String> equationList = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         try{
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(
@@ -30,12 +30,12 @@ public class AccessUtils {
             String strBuffer;
             while((strBuffer = reader.readLine())!=null){
                 int index = strBuffer.lastIndexOf(".");
-                equationList.add(strBuffer.substring(index+2));
+                list.add(strBuffer.substring(index+2));
             }
             reader.close();
-            return equationList;
+            return list;
         }catch (Exception e){
-            throw new NullPointerException("文本路径错误");
+            throw new IllegalArgumentException("文本路径错误");
         }
     }
 
@@ -46,11 +46,10 @@ public class AccessUtils {
      */
     public static void write(String text, String writePath){
         try{
-            System.out.println("写入:" + text);
             FileWriter writer = new FileWriter(writePath, true);
-            writer.write(text+"\n");
+            writer.write(text);
             writer.flush();
-            System.out.println("已写入文件:" + writePath);
+            System.out.println(text + "已写入文件:" + writePath);
             writer.close();
         }catch (Exception e){
             System.out.println("写入文件失败");

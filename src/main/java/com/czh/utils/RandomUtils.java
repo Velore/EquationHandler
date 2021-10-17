@@ -1,12 +1,13 @@
 package com.czh.utils;
 
 /**
+ * 随机数生成工具类
  * @author chenzhuohong
  */
 public class RandomUtils {
 
     /**
-     * 生成随机整数
+     * 随机生成整数
      * @param n 随机数的右边界
      * @return 生成随机整数(0,n)
      */
@@ -15,7 +16,7 @@ public class RandomUtils {
     }
 
     /**
-     * 随机真分数
+     * 随机生成真分数
      * @param n 分母的最大值
      * @return String
      */
@@ -23,11 +24,11 @@ public class RandomUtils {
         int[] pref = new int[2];
         pref[1] = randomInt(n+1);
         pref[0] = randomInt(pref[1]);
-        return CalculateUtils.reduceFraction(pref[0] + "/" + pref[1]);
+        return ElementUtils.simplifyFraction(pref[0] + "/" + pref[1]);
     }
 
     /**
-     * 随机带分数
+     * 随机生成带分数
      * @param n 分数的最大值，分母的最大值
      * @return String
      */
@@ -36,7 +37,7 @@ public class RandomUtils {
         f[1] = randomInt(n+1);
         f[0] = randomInt(f[1]);
         f[2] = randomInt(n);
-        return CalculateUtils.reduceFraction(f[2] + "'" + f[0] + "/" + f[1]);
+        return ElementUtils.simplifyFraction(f[2] + "'" + f[0] + "/" + f[1]);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.czh;
 import java.util.ArrayList;
 
 /**
+ * 算式实体类
  * @author chenzhuohong
  */
 public class Equation {
@@ -17,6 +18,9 @@ public class Equation {
      */
     private ArrayList<String> elementList;
 
+    /**
+     * 算式的答案
+     */
     private String answer;
 
     public Equation(){
