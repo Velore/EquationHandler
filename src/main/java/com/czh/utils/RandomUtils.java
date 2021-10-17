@@ -22,7 +22,9 @@ public class RandomUtils {
      */
     public static String randomProperFraction(int n){
         int[] pref = new int[2];
+        //分母
         pref[1] = randomInt(n+1);
+        //分子
         pref[0] = randomInt(pref[1]);
         return ElementUtils.simplifyFraction(pref[0] + "/" + pref[1]);
     }
@@ -34,8 +36,11 @@ public class RandomUtils {
      */
     public static String randomMixedFraction(int n){
         int[] f = new int[3];
+        //分母
         f[1] = randomInt(n+1);
+        //分子
         f[0] = randomInt(f[1]);
+        //带分数带的部分
         f[2] = randomInt(n);
         return ElementUtils.simplifyFraction(f[2] + "'" + f[0] + "/" + f[1]);
     }

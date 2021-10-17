@@ -28,8 +28,10 @@ public class AccessUtils {
                     new InputStreamReader(
                             new FileInputStream(readPath), StandardCharsets.UTF_8));
             String strBuffer;
+            //循环读取文件直至文件结尾
             while((strBuffer = reader.readLine())!=null){
                 int index = strBuffer.lastIndexOf(".");
+                //提取读出的String中有用的部分并保存
                 list.add(strBuffer.substring(index+2));
             }
             reader.close();

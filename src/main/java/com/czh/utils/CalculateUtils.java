@@ -88,6 +88,7 @@ public class CalculateUtils {
                 if ((s.charAt(i) + "").matches("\\d")){
                     // 运算数的处理
                     StringBuilder builder = new StringBuilder();
+                    //除了运算符以外的字符都是运算数
                     do{
                         builder.append(s.charAt(i));
                         i++;

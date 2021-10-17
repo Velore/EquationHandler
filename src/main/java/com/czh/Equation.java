@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * 算式实体类
+ * 算式的运算数和运算符都称为算式的元素
  * @author chenzhuohong
  */
 public class Equation {
@@ -15,6 +16,7 @@ public class Equation {
 
     /**
      * 四则运算算式的元素list
+     * 运算数和运算符
      */
     private ArrayList<String> elementList;
 

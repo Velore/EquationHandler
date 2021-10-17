@@ -147,9 +147,9 @@ public class EquationHandler {
                 if ("-n".equals(arg) || "-r".equals(arg)) {
                         generateEquationAndAnswer(count, maxNum);
                         break;
-                } else {
-                    checkAnswer(EXERCISES_PATH, ANSWER_PATH);
                 }
+                checkAnswer(EXERCISES_PATH, ANSWER_PATH);
+                break;
             }
         }catch (Exception e){
             e.printStackTrace();

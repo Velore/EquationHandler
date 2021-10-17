@@ -6,11 +6,9 @@ package com.czh.utils;
  */
 public class ElementUtils {
 
-
     /**
      * 提取分数字符串的分子和分母
-     * 减法结果可能为负数
-     * 参数为负数会抛出越界-1异常
+     * 若参数为负数, 则”/“的下标为-, 抛出越界-1异常
      * @param s 分数字符串
      * @return int数组
      */
@@ -70,6 +68,7 @@ public class ElementUtils {
      * @return 是运算数返回true
      */
     public static boolean isOperator(char c){
+        //'|'本身无意义, 看作运算符方便计算
         return c == '+' || c == '-' || c == '×' || c == '÷' || c == '(' || c == ')' || c == '|';
     }
 
@@ -96,6 +95,23 @@ public class ElementUtils {
      * @return s1>s2,返回true
      */
     public static boolean compareNum(String s1, String s2){
+        //两个运算数都是负数，提取正数部分，正数部分越小，原运算数越大
+        if(s1.charAt(0)=='-' && s2.charAt(0)=='-'){
+            s1 = s1.substring(1);
+            s2 = s2.substring(1);
+            int[] l1 = splitFraction(s1);
+            int[] l2 = splitFraction(s2);
+            return l1[0]*l2[1] < l2[0]*l1[1];
+        }
+        //正数大于负数
+        if(s1.charAt(0)=='-' && s2.charAt(0)!='-'){
+            return false;
+        }
+        //正数大于负数
+        if(s1.charAt(0)!='-' && s2.charAt(0)=='-'){
+            return true;
+        }
+        //两正运算数数比较
         int[] l1 = splitFraction(s1);
         int[] l2 = splitFraction(s2);
         return l1[0]*l2[1] > l2[0]*l1[1];
@@ -118,9 +134,11 @@ public class ElementUtils {
      */
     public static int getPriorityValue(String str) {
         switch(str.trim()){
+            //加号减号优先级低
             case "+":
             case "-":
                 return 1;
+            //乘号除号优先级高
             case "×":
             case "÷":
                 return 2;
