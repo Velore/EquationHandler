@@ -35,8 +35,8 @@ public class EquationUtils {
     }
 
     /**
-     * 通过下标置换原list下标两边的子list
-     * 2为下标元素:[1, 2, 3]->[3, 2, 1]
+     * 通过下标置换下标两边的子list
+     * 如: 2为下标元素:[1, 2, 3]->[3, 2, 1]
      * @param list 需要置换的list
      * @param index 下标
      * @return 置换后的list
@@ -103,6 +103,14 @@ public class EquationUtils {
         }
     }
 
+    /**
+     * 获取算式元素中的左运算数(左子算式)
+     * 如: a-b获取a, 此时a可以是任何复杂的运算数(子算式)
+     * 如: (a*b+c)-d, 该方法返回(a*b+c)
+     * @param index 算式元素中运算符左边第一位字符的下标
+     * @param element 算式的元素list
+     * @return 元素或子算式list
+     */
     public static ArrayList<String> getLeftSubElement(int index, ArrayList<String> element){
         ArrayList<String> subElement = new ArrayList<>();
         while(index>=0){
@@ -127,6 +135,14 @@ public class EquationUtils {
         return subElement;
     }
 
+    /**
+     * 获取算式元素中的右运算数(右子算式)
+     * 如: a-b获取b, 此时b可以是任何复杂的运算数(子算式)
+     * 如: a-(b*c+d), 该方法返回(b*c+d)
+     * @param index 算式元素中运算符右边第一位字符的下标
+     * @param element 算式的元素list
+     * @return 元素或子算式list
+     */
     public static ArrayList<String> getRightSubElement(int index, ArrayList<String> element){
         ArrayList<String> subElement = new ArrayList<>();
         while(index< element.size()){
@@ -157,6 +173,7 @@ public class EquationUtils {
 //     * 防止结果的分母为0导致计算出现NaN
 //     * @param list 要检查的算式
 //     */
+//    @Deprecated
 //    public static void checkDivide(ArrayList<String> list){
 //        int index;
 //        for(index = 0;index<list.size();index++){

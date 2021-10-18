@@ -37,14 +37,26 @@ public class Equation {
         return this.elementList;
     }
 
+    /**
+     * 设置算式的元素list
+     * @param list ArrayList
+     */
     public void setElementList(ArrayList<String> list){
         this.elementList = list;
     }
 
+    /**
+     * 获取算式的答案
+     * @return String
+     */
     public String getAnswer(){
         return this.answer;
     }
 
+    /**
+     * 写入算式的答案
+     * @param answer String
+     */
     public void setAnswer(String answer){
         this.answer = answer;
     }
@@ -65,5 +77,4 @@ public class Equation {
     public void addLast(String s){
         this.elementList.add(this.elementList.size(), s);
     }
-
 }

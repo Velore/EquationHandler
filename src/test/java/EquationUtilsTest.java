@@ -44,7 +44,6 @@ public class EquationUtilsTest {
         System.out.println(l3);
         EquationUtils.checkMinus(l3);
         System.out.println(l3);
-
     }
 
     @Test

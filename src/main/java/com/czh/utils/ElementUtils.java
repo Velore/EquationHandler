@@ -8,7 +8,7 @@ public class ElementUtils {
 
     /**
      * 提取分数字符串的分子和分母
-     * 若参数为负数, 则”/“的下标为-, 抛出越界-1异常
+     * 若参数为负数, 则s不一定为分数, ”/“不一定存在于s之中, 可能抛出越界-1异常
      * @param s 分数字符串
      * @return int数组
      */
@@ -91,7 +91,6 @@ public class ElementUtils {
         }
         return true;
     }
-
 
     /**
      * 对比两个数的大小

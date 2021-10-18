@@ -36,7 +36,7 @@ public class CalculateUtils {
                     i++;
                     continue;
                 }
-                //上一个元素不为"(",且当前运算符优先级小于上一个元素,则将比这个运算符优先级大的元素全部加入到队列中
+                //上一个元素不为"(", 且当前运算符优先级小于上一个元素, 则将比这个运算符优先级大的元素全部加入到队列中
                 while (!stack.isEmpty()&&
                         !("(").equals(stack.lastElement())&&
                         !ElementUtils.comparePriority(s.charAt(i)+"",stack.lastElement())){
@@ -49,11 +49,11 @@ public class CalculateUtils {
                 stack.push(s.charAt(i)+"");
                 i++;
             }else if(s.charAt(i)==')'){
-                //遇到")"，则寻找上一个"("，然后把中间的值全部放入队列中
+                //遇到")", 则寻找上一个"(", 然后把中间的值全部放入队列中
                 while(!("(").equals(stack.lastElement())){
                     list.add(stack.pop());
                 }
-                //上述循环停止，这栈顶元素必为"("
+                //上述循环停止, 栈顶元素必为"("
                 stack.pop();
                 i++;
             }
@@ -62,6 +62,7 @@ public class CalculateUtils {
         while (!stack.isEmpty()){
             list.add(stack.pop());
         }
+        //用"|"将逆波兰式中运算数和运算符分割开,便于后续有关String的处理
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i<list.size(); i++){
             if(i==list.size()-1){
@@ -72,7 +73,6 @@ public class CalculateUtils {
         }
         return builder.toString();
     }
-
 
     /**
      * 计算四则运算方程
@@ -148,6 +148,7 @@ public class CalculateUtils {
 
     /**
      * 简单四则运算
+     * 只包含一个运算符的运算
      * @param m 运算数1
      * @param n 运算数2
      * @param o 运算符
@@ -202,11 +203,13 @@ public class CalculateUtils {
         if(ElementUtils.isInteger(m) && ElementUtils.isInteger(n)){
             return String.valueOf(Integer.parseInt(m)-Integer.parseInt(n));
         }
+        //运算数非整数时, 全部转换为分数处理
         int[] m1 = ElementUtils.splitFraction(m);
         int[] n1 = ElementUtils.splitFraction(n);
         //result为计算结果的分子和分母
         // a/b - c/d = ( a*d - b*c )/( b*d )
         String result = (m1[0] * n1[1] - n1[0] * m1[1]) + "/" + (m1[1] * n1[1]);
+        //简化结果分数后返回
         return ElementUtils.simplifyFraction(result);
     }
 
@@ -236,6 +239,7 @@ public class CalculateUtils {
      * @return String
      */
     public static String divide(String m, String n){
+        //被除数为0, 结果为0
         if("0".equals(m)){
             return "0";
         }
