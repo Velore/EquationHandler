@@ -14,27 +14,32 @@ public class ElementUtils {
      */
     public static int[] splitFraction(String s){
         int[] nums = new int[2];
-        //传入的参数是个整数,则分子为参数,分母为1
-        if(ElementUtils.isInteger(s)){
-            nums[0] = Integer.parseInt(s);
-            nums[1] = 1;
-        }else{
-            //分数分号的下标
-            int index1 = s.indexOf("/");
-            //提取分母
-            nums[1] = Integer.parseInt(s.substring(index1+1));
-            //提取分子
-            if(s.contains("'")){
-                //带分数符号的下标
-                int index2 = s.indexOf("'");
-                //带分数分子
-                //a'b/c = (a*c+b)/c
-                nums[0] = Integer.parseInt(s.substring(0, index2))*nums[1]
-                        +Integer.parseInt(s.substring(index2+1, index1));
+        try{
+            //传入的参数是个整数,则分子为参数,分母为1
+            if(ElementUtils.isInteger(s)){
+                nums[0] = Integer.parseInt(s);
+                nums[1] = 1;
             }else{
-                //真分数分子
-                nums[0] = Integer.parseInt(s.substring(0, index1));
+                //分数分号的下标
+                int index1 = s.indexOf("/");
+                //提取分母
+                nums[1] = Integer.parseInt(s.substring(index1+1));
+                //提取分子
+                if(s.contains("'")){
+                    //带分数符号的下标
+                    int index2 = s.indexOf("'");
+                    //带分数分子
+                    //a'b/c = (a*c+b)/c
+                    nums[0] = Integer.parseInt(s.substring(0, index2))*nums[1]
+                            +Integer.parseInt(s.substring(index2+1, index1));
+                }else{
+                    //真分数分子
+                    nums[0] = Integer.parseInt(s.substring(0, index1));
+                }
             }
+            return nums;
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return nums;
     }
@@ -95,6 +100,12 @@ public class ElementUtils {
      * @return s1>s2,返回true
      */
     public static boolean compareNum(String s1, String s2){
+        if("NaN".equals(s1)){
+            return true;
+        }
+        if("NaN".equals(s2)){
+            return false;
+        }
         //两个运算数都是负数，提取正数部分，正数部分越小，原运算数越大
         if(s1.charAt(0)=='-' && s2.charAt(0)=='-'){
             s1 = s1.substring(1);

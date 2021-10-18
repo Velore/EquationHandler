@@ -122,7 +122,7 @@ public class EquationHandler {
             if(i==grade.size()-1){
                 AccessUtils.write(grade.get(i)+")\n", path);
             }else {
-                AccessUtils.write(grade.get(i + 1)+", ", path);
+                AccessUtils.write(grade.get(i)+", ", path);
             }
         }
     }

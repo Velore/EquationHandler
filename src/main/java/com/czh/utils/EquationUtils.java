@@ -56,6 +56,8 @@ public class EquationUtils {
     /**
      * 检查算式的减法运算是否大于0
      * 若小于0，则交换减法的运算数
+     * 若算式形式为(a-b-c且a>b>c),则该方法无法检测出来
+     * 因此在生成运算符时,避免连续生成两个减号
      * @param list 算式的元素list
      */
     public static void checkMinus(ArrayList<String> list){
@@ -63,58 +65,16 @@ public class EquationUtils {
         for(index = 0;index<list.size();index++){
             if("-".equals(list.get(index).trim())){
                 //减法左值元素的下标
-                int li;
+                int li = index-1;
                 //减法右值元素的下标
-                int ri;
+                int ri = index+1;
                 //减法的左值元素list
-                ArrayList<String> rightList = new ArrayList<>();
+                ArrayList<String> rightList;
                 //减法的右值元素list
-                ArrayList<String> leftList = new ArrayList<>();
-                for(li = index-1;li>=0;){
-                    //将减法左边的值元素整个取出
-                    // 即a*(b+c)-d取出a*(b+c)
-                    // 或(b+c)*a-d取出(b+c)*a
-                    if(!"+".equals(list.get(li).trim()) || !"-".equals(list.get(li).trim())){
-                        if("(".equals(list.get(li))){
-                            break;
-                        }
-                        //若左值内存在右括号，则说明减法在这对括号之外，将括号内的值全部取出
-                        //如：(...)-b
-                        if(")".equals(list.get(li))){
-                            do{
-                                leftList.add(0, list.get(li));
-                                li--;
-                            }while (!"(".equals(list.get(li)));
-                        }
-                        leftList.add(0, list.get(li));
-                        li--;
-                        continue;
-                    }
-                    break;
-                }
-                //若减法的左值内仍包含减法，则递归检查
-                if(leftList.contains(" - ")){
-                    checkMinus(leftList);
-                }
-                for(ri = index+1;ri<list.size();){
-                    if(!"+".equals(list.get(ri).trim()) || !"-".equals(list.get(ri).trim())){
-                        if(")".equals(list.get(ri))){
-                            break;
-                        }
-                        //若右值内存在左括号，则说明减法在这对括号之外，将括号内的值全部取出
-                        //如：a-(...)
-                        if("(".equals(list.get(ri))){
-                            do{
-                                rightList.add(list.get(ri));
-                                ri++;
-                            }while (!")".equals(list.get(ri)));
-                        }
-                        rightList.add(list.get(ri));
-                        ri++;
-                        continue;
-                    }
-                    break;
-                }
+                ArrayList<String> leftList;
+                leftList = getLeftSubElement(li, list);
+                //算式从左边开始检查, 因此, 若减法的左值内仍包含减法, 不再重复检查
+                rightList = getRightSubElement(ri, list);
                 //若减法的右值内仍包含减法，则递归检查
                 if(rightList.contains(" - ")){
                     checkMinus(rightList);
@@ -133,8 +93,8 @@ public class EquationUtils {
                     eList.add(" - ");
                     eList.addAll(leftList);
                 }
-                li += 1;
-                ri -= 1;
+                li -= leftList.size()-1;
+                ri += rightList.size()-1;
                 //将eList中的元素置换保存至原算式list
                 for(int j = 0, i = li;i<=ri;i++, j++){
                     list.set(i, eList.get(j));
@@ -142,6 +102,77 @@ public class EquationUtils {
             }
         }
     }
+
+    public static ArrayList<String> getLeftSubElement(int index, ArrayList<String> element){
+        ArrayList<String> subElement = new ArrayList<>();
+        while(index>=0){
+            if(!"+".equals(element.get(index).trim()) || !"-".equals(element.get(index).trim())){
+                if("(".equals(element.get(index))){
+                    break;
+                }
+                if(")".equals(element.get(index))){
+                    do{
+                        subElement.add(0, element.get(index));
+                        index--;
+                    }while (index >0 && !"(".equals(element.get(index)));
+                }
+                if(index>=0){
+                    subElement.add(0, element.get(index));
+                }
+                index--;
+                continue;
+            }
+            break;
+        }
+        return subElement;
+    }
+
+    public static ArrayList<String> getRightSubElement(int index, ArrayList<String> element){
+        ArrayList<String> subElement = new ArrayList<>();
+        while(index< element.size()){
+            if(!"+".equals(element.get(index).trim()) || !"-".equals(element.get(index).trim())){
+                if(")".equals(element.get(index))){
+                    break;
+                }
+                if("(".equals(element.get(index))){
+                    do{
+                        subElement.add(element.get(index));
+                        index++;
+                    }while (index < element.size() && !")".equals(element.get(index)));
+                }
+                if(index<element.size()){
+                    subElement.add(element.get(index));
+                }
+                index++;
+                continue;
+            }
+            break;
+        }
+        return subElement;
+    }
+
+//    /**
+//     * 注:该方法无法处理减法小于0和除法除以0同时存在的情况,故废弃
+//     * 检查元素list中的除法
+//     * 防止结果的分母为0导致计算出现NaN
+//     * @param list 要检查的算式
+//     */
+//    public static void checkDivide(ArrayList<String> list){
+//        int index;
+//        for(index = 0;index<list.size();index++){
+//            ArrayList<String> rightList = new ArrayList<>();
+//            if("÷".equals(list.get(index).trim())){
+//                rightList = getRightSubElement(index+1, list);
+//                if(rightList.contains(" ÷ ")){
+//                    checkDivide(rightList);
+//                }
+//                if("0".equals(CalculateUtils.calculate(transformToEquation(rightList)))){
+//                    list.set(index, " × ");
+//                    break;
+//                }
+//            }
+//        }
+//    }
 
     /**
      * 将元素list转换为可计算的算式String
@@ -169,20 +200,36 @@ public class EquationUtils {
         //总数 = 操作符个数 * 2 + 1
         int index;
         for(index = 0; index<operatorNum*2+1 ;index++){
+            String lastOperator = "-";
             //方程最开始push运算数
             //之后每push一个运算数，就push一个运算符
             if( index % 2 == 0 ){
                     equation.addLast(RandomUtils.randomNum(maxNum));
                     equation.setElementList(EquationUtils.addBracket(equation.getElementList()));
             }else{
-                equation.addLast(" "+RandomUtils.randomOperator()+" ");
+                if("-".equals(lastOperator)){
+                    String o;
+                    do{
+                        o = RandomUtils.randomOperator();
+                    }while (lastOperator.equals(o));
+                    lastOperator = o;
+                }else{
+                    lastOperator = RandomUtils.randomOperator();
+                }
+                equation.addLast(" "+lastOperator+" ");
             }
         }
         //检查算式的减法
         checkMinus(equation.getElementList());
         equation.addLast(" = ");
         //计算算式的结果并保存回自身
-        equation.setAnswer(CalculateUtils.calculate(equation.toString()));
+        //若算式的结果为NaN,则递归生成算式直至结果不为NaN
+        String result = CalculateUtils.calculate(equation.toString());
+        if("NaN".equals(result)){
+            equation = buildEquation(maxNum);
+            result = CalculateUtils.calculate(equation.toString());
+        }
+        equation.setAnswer(result);
         return equation;
     }
 

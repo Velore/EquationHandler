@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -24,9 +23,10 @@ public class AccessUtils {
         }
         ArrayList<String> list = new ArrayList<>();
         try{
+            //使用系统默认字符集读取,否则会无法识别
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(
-                            new FileInputStream(readPath), StandardCharsets.UTF_8));
+                            new FileInputStream(readPath)));
             String strBuffer;
             //循环读取文件直至文件结尾
             while((strBuffer = reader.readLine())!=null){
@@ -37,7 +37,7 @@ public class AccessUtils {
             reader.close();
             return list;
         }catch (Exception e){
-            throw new IllegalArgumentException("文本路径错误");
+            throw new IllegalArgumentException("文本路径错误:"+readPath);
         }
     }
 

@@ -77,7 +77,7 @@ public class CalculateUtils {
     /**
      * 计算四则运算方程
      * @param str 四则运算方程
-     * @return 计算结果可能为分数，用字符串表示
+     * @return 计算结果用字符串表示
      */
     public static String calculate(String str){
         //获取四则运算方程的逆波兰式
@@ -98,8 +98,14 @@ public class CalculateUtils {
                     //运算符的处理
                     String v1 = stack.pop();
                     String v2 = stack.pop();
-                    // 计算结果并入栈
-                    stack.push(simpleCalculate(v2, v1, (s.charAt(i)+"")));
+                    // 计算结果
+                    String res = simpleCalculate(v2, v1, (s.charAt(i)+""));
+                    //若计算结果出现NaN,直接返回
+                    if("NaN".equals(res)){
+                        return "NaN";
+                    }
+                    //若计算结果不为NaN,则入栈
+                    stack.push(res);
                     i++;
                 }else if("|".equals(s.charAt(i)+"")){
                     //对分隔符不做处理
@@ -148,6 +154,10 @@ public class CalculateUtils {
      * @return 运算结果 String
      */
     public static String simpleCalculate(String m, String n, String o){
+        //两个运算数中出现一个NaN,计算结果为NaN
+        if("NaN".equals(m) || "NaN".equals(n)){
+            return "NaN";
+        }
         switch (o){
             case "+":
                 return plus(m, n);
@@ -229,8 +239,9 @@ public class CalculateUtils {
         if("0".equals(m)){
             return "0";
         }
+        //除数为0,即分母为0,返回NaN
         if("0".equals(n)){
-            throw new IllegalArgumentException("除数不能为0");
+            return "NaN";
         }
         //两个运算数都是整数
         if(ElementUtils.isInteger(m) && ElementUtils.isInteger(n)){
