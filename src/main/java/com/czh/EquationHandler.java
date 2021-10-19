@@ -99,9 +99,11 @@ public class EquationHandler {
             throw new IllegalArgumentException("请输入正确的参数");
         }
         list = generator(count, maxNum);
+        AccessUtils.write("", EquationHandler.EXERCISES_PATH, false);
+        AccessUtils.write("", EquationHandler.ANSWER_PATH, false);
         for (int i = 0;i< list.size();i++) {
-            AccessUtils.write((i+1)+". "+list.get(i)+"\n", EquationHandler.EXERCISES_PATH);
-            AccessUtils.write((i+1)+". "+list.get(i).getAnswer()+"\n", EquationHandler.ANSWER_PATH);
+            AccessUtils.write((i+1)+". "+list.get(i)+"\n", EquationHandler.EXERCISES_PATH, true);
+            AccessUtils.write((i+1)+". "+list.get(i).getAnswer()+"\n", EquationHandler.ANSWER_PATH, true);
         }
     }
 
@@ -139,9 +141,10 @@ public class EquationHandler {
                     wList.add((i+1)+"");
                 }
             }
-            AccessUtils.write("Correct :", GRADE_PATH);
+            AccessUtils.write("", GRADE_PATH, false);
+            AccessUtils.write("Correct :", GRADE_PATH, true);
             writeGrade(cList, GRADE_PATH);
-            AccessUtils.write("Wrong :", GRADE_PATH);
+            AccessUtils.write("Wrong :", GRADE_PATH, true);
             writeGrade(wList, GRADE_PATH);
         }catch (Exception e){
             e.printStackTrace();
@@ -155,11 +158,14 @@ public class EquationHandler {
      * @param path 写入路径
      */
     public static void writeGrade(ArrayList<String> grade, String path){
-        AccessUtils.write(grade.size()+"(", path);
-        for (String s : grade) {
-            AccessUtils.write(s + ", ", path);
+        AccessUtils.write(grade.size()+"(", path, true);
+        for (int i = 0 ; i<grade.size() ; i++) {
+            AccessUtils.write(grade.get(i),  path, true);
+            if(i!=grade.size()-1){
+                AccessUtils.write(", ",  path, true);
+            }
         }
-        AccessUtils.write(")\n", path);
+        AccessUtils.write(")\n", path, true);
     }
 
     public static void main(String[] args) {

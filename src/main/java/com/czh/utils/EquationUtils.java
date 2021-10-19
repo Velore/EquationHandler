@@ -15,7 +15,7 @@ public class EquationUtils {
     /**
      * 在算式的元素list中添加括号
      * @param list 算式的元素list
-     * @return 修改后的list
+     * @return 添加括号后的元素list
      */
     public static ArrayList<String> addBracket(ArrayList<String> list){
         int size = list.size();
@@ -24,6 +24,7 @@ public class EquationUtils {
             //只有在+和-上加括号才对算式有影响
             if("-".equals(list.get(size-2).trim())|| "+".equals(list.get(size-2).trim())){
                 //如果要添加括号的位置已经存在括号，则不做处理
+                //算式只有一个运算符时，也不做处理
                 if(")".equals(list.get(size-3)) || size == 3){
                     return list;
                 }
@@ -35,8 +36,8 @@ public class EquationUtils {
     }
 
     /**
-     * 通过下标置换下标两边的子list
-     * 如: 2为下标元素:[1, 2, 3]->[3, 2, 1]
+     * 通过下标置换下标两边的子list;
+     * 如: 2为下标元素:[1, 2, 3]->[3, 2, 1];
      * @param list 需要置换的list
      * @param index 下标
      * @return 置换后的list
@@ -54,10 +55,10 @@ public class EquationUtils {
     }
 
     /**
-     * 检查算式的减法运算是否大于0
-     * 若小于0，则交换减法的运算数
-     * 若算式形式为(a-b-c且a>b>c),则该方法无法检测出来
-     * 因此在生成运算符时,避免连续生成两个减号
+     * 检查算式的减法运算是否大于0;
+     * 若小于0，则交换减法的运算数;
+     * 若算式形式为(a-b-c且a>b>c),则该方法无法检测出来;
+     * 因此在生成运算符时,避免连续生成两个减号;
      * @param list 算式的元素list
      */
     public static void checkMinus(ArrayList<String> list){
@@ -83,12 +84,14 @@ public class EquationUtils {
                 String lv = (leftList.size()>=3)?CalculateUtils.calculate(transformToEquation(leftList)): leftList.get(0);
                 String rv = (rightList.size()>=3)?CalculateUtils.calculate(transformToEquation(rightList)): rightList.get(0);
                 //eList存放减法检查后的结果
+                //创建eList时假设减法结果大于0, 因此复制list的值
                 ArrayList<String> eList;
                 if(ElementUtils.compareNum(lv, rv)){
                     eList = new ArrayList<>(leftList);
                     eList.add(" - ");
                     eList.addAll(rightList);
                 }else{
+                    //如果减法的两个运算数比较小于0, 说明计算会出现负数, 交换两运算数
                     eList = new ArrayList<>(rightList);
                     eList.add(" - ");
                     eList.addAll(leftList);
@@ -104,9 +107,9 @@ public class EquationUtils {
     }
 
     /**
-     * 获取算式元素中的左运算数(左子算式)
-     * 如: a-b获取a, 此时a可以是任何复杂的运算数(子算式)
-     * 如: (a*b+c)-d, 该方法返回(a*b+c)
+     * 获取算式元素中的左运算数(左子算式);
+     * 如: a-b获取a, 此时a可以是任何复杂的运算数(子算式);
+     * 如: (a*b+c)-d, 该方法返回(a*b+c);
      * @param index 算式元素中运算符左边第一位字符的下标
      * @param element 算式的元素list
      * @return 元素或子算式list
@@ -136,9 +139,9 @@ public class EquationUtils {
     }
 
     /**
-     * 获取算式元素中的右运算数(右子算式)
-     * 如: a-b获取b, 此时b可以是任何复杂的运算数(子算式)
-     * 如: a-(b*c+d), 该方法返回(b*c+d)
+     * 获取算式元素中的右运算数(右子算式);
+     * 如: a-b获取b, 此时b可以是任何复杂的运算数(子算式);
+     * 如: a-(b*c+d), 该方法返回(b*c+d);
      * @param index 算式元素中运算符右边第一位字符的下标
      * @param element 算式的元素list
      * @return 元素或子算式list
@@ -216,23 +219,28 @@ public class EquationUtils {
         //操作数个数 = 操作符个数 + 1
         //总数 = 操作符个数 * 2 + 1
         int index;
+        String lastOperator = "+";
         for(index = 0; index<operatorNum*2+1 ;index++){
-            String lastOperator = "-";
             //方程最开始push运算数
-            //之后每push一个运算数，就push一个运算符
+            //之后每push一个运算数, 就push一个运算符
             if( index % 2 == 0 ){
                     equation.addLast(RandomUtils.randomNum(maxNum));
+                    //每push一个运算数, 就尝试能否添加一个括号
                     equation.setElementList(EquationUtils.addBracket(equation.getElementList()));
             }else{
+                //若上一次添加的运算符为减号, 则避免本次添加的运算符仍为减号
                 if("-".equals(lastOperator)){
                     String o;
                     do{
                         o = RandomUtils.randomOperator();
+                        //循环获取直至运算符不是减号
                     }while (lastOperator.equals(o));
                     lastOperator = o;
                 }else{
+                    //若上次添加的运算符不是减号, 则随机获取运算符
                     lastOperator = RandomUtils.randomOperator();
                 }
+                //将运算符添加至算式的末尾
                 equation.addLast(" "+lastOperator+" ");
             }
         }
@@ -251,11 +259,19 @@ public class EquationUtils {
     }
 
 //    /**
-//     * 检测两个方程是否相同
+//     * 检测两个算式是否相同
 //     * @param e Equation
 //     * @return 相同返回true
 //     */
-//    public boolean duplicateCheck(Equation e){
+//    public boolean duplicateCheck(Equation e, HashMap<Integer, String> hashList){
+//        int equationHash;
+//        for(int i = 0;i<e.getElementList().size();i++){
+//            if("+".equals(e.getElementList().get(i).trim())|| "×".equals(e.getElementList().get(i).trim())){
+//                ArrayList<String> left = EquationUtils.getLeftSubElement(i-1, e.getElementList());
+//                ArrayList<String> right = EquationUtils.getRightSubElement(i+1, e.getElementList());
+//
+//            }
+//        }
 //        return false;
 //    }
 

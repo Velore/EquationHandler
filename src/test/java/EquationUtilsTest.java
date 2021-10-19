@@ -20,6 +20,7 @@ public class EquationUtilsTest {
 
     @Test
     public void checkMinusTest(){
+        //减法出现的四种情况
         //a*(b-c)-d
         String[] s0 = {"2", " × ", "(", "4", " - ", "5", ")", " - ", "6"};
         ArrayList<String> l0 = new ArrayList<>(Arrays.asList(s0));

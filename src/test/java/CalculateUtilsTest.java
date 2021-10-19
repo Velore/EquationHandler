@@ -22,9 +22,9 @@ public class CalculateUtilsTest {
 
     @Test
     public void isIntegerTest(){
-        System.out.println(ElementUtils.isInteger("2'1/7"));
-        System.out.println(ElementUtils.isInteger("1/2"));
-        System.out.println(ElementUtils.isInteger("132472"));
+        System.out.println("2'1/7 is Integer："+ElementUtils.isInteger("2'1/7"));
+        System.out.println("1/2 is Integer："+ElementUtils.isInteger("1/2"));
+        System.out.println("132472 is Integer："+ElementUtils.isInteger("132472"));
     }
 
     @Test
@@ -62,8 +62,8 @@ public class CalculateUtilsTest {
     }
 
     @Test
-    public void reduceFractionTest(){
-        System.out.println(ElementUtils.simplifyFraction("24/7"));
+    public void simplifyFractionTest(){
+        System.out.println(ElementUtils.simplifyFraction("3'8/8"));
     }
 
     @Test
@@ -83,7 +83,8 @@ public class CalculateUtilsTest {
 
     @Test
     public void divideTest(){
-        System.out.println(CalculateUtils.divide("3", "4"));
+        System.out.println(CalculateUtils.divide("0", "4"));
+        System.out.println(CalculateUtils.divide("2", "0"));
         System.out.println(CalculateUtils.divide("2'2/3", "4"));
         System.out.println(CalculateUtils.divide("1'2/3", "2'5/7"));
 

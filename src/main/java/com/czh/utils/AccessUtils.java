@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class AccessUtils {
 
     /**
-     * 从绝对路径中读入算式
+     * 从路径中读入算式
      * @param readPath 文本路径
      * @return 算式list
      */
@@ -46,9 +46,9 @@ public class AccessUtils {
      * @param text String
      * @param writePath 写入文件的绝对路径
      */
-    public static void write(String text, String writePath){
+    public static void write(String text, String writePath, boolean append){
         try{
-            FileWriter writer = new FileWriter(writePath, true);
+            FileWriter writer = new FileWriter(writePath, append);
             writer.write(text);
             writer.flush();
             System.out.println(text + "已写入文件:" + writePath);
