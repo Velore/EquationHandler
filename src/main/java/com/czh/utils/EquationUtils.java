@@ -104,6 +104,29 @@ public class EquationUtils {
     }
 
     /**
+     * 在进行逆波兰表达式处理后，将处理后的字符串转换为List
+     * @param s 题目String
+     * @return 处理后的题目list
+     */
+    public static List<String> transformStringToList(String s){
+        ArrayList<String> list = new ArrayList<>();
+        //遍历该表达式
+        for(int i = 0;i<s.length();i++){
+            //如果当前位不为"|"(分隔符)，则将当前位字符拼接入StringBuilder中，直到遇到下一个分隔符
+            if(!"|".equals(s.charAt(i)+"")){
+                StringBuilder builder = new StringBuilder();
+                do{
+                    builder.append(s.charAt(i));
+                    i++;
+                }while (i<s.length() && !"|".equals(s.charAt(i)+""));
+                //将分隔符内的元素存入list中
+                list.add(builder.toString());
+            }
+        }
+        return list;
+    }
+
+    /**
      * 获取算式元素中的左运算数(左子算式)
      * 如: a-b获取a, 此时a可以是任何复杂的运算数(子算式)
      * 如: (a*b+c)-d, 该方法返回(a*b+c)
@@ -166,30 +189,6 @@ public class EquationUtils {
         }
         return subElement;
     }
-
-//    /**
-//     * 注:该方法无法处理减法小于0和除法除以0同时存在的情况,故废弃
-//     * 检查元素list中的除法
-//     * 防止结果的分母为0导致计算出现NaN
-//     * @param list 要检查的算式
-//     */
-//    @Deprecated
-//    public static void checkDivide(ArrayList<String> list){
-//        int index;
-//        for(index = 0;index<list.size();index++){
-//            ArrayList<String> rightList = new ArrayList<>();
-//            if("÷".equals(list.get(index).trim())){
-//                rightList = getRightSubElement(index+1, list);
-//                if(rightList.contains(" ÷ ")){
-//                    checkDivide(rightList);
-//                }
-//                if("0".equals(CalculateUtils.calculate(transformToEquation(rightList)))){
-//                    list.set(index, " × ");
-//                    break;
-//                }
-//            }
-//        }
-//    }
 
     /**
      * 将元素list转换为可计算的算式String

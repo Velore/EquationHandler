@@ -1,7 +1,6 @@
 package com.czh.utils;
 
-import java.util.ArrayList;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * 算式计算工具类
@@ -17,7 +16,10 @@ public class CalculateUtils {
     public static String getPolishNotation(String s){
         //去除算式String中的空格,便于后续处理
         s = s.replaceAll(" ", "");
+        //初始化一个栈和一个list
+        //用于存储中间结果
         ArrayList<String> list = new ArrayList<>();
+        //用于存储运算符
         Stack<String> stack = new Stack<>();
         //s.length()-1是为了去掉方程末尾的"="
         for (int i=0;i<s.length()-1;){
@@ -118,6 +120,111 @@ public class CalculateUtils {
         }
         //计算过程中出现异常即返回NaN(Not a Number)
         return "NaN";
+    }
+
+
+
+
+    public static boolean isDuplicate(List<String> s1,List<String> s2,int index1,int index2){
+        String[] temp1 = new String[2];
+        String[] temp2 = new String[2];
+        temp1[0] = s1.get(index1-1);
+        temp1[1] = s1.get(index1-2);
+        temp2[0] = s2.get(index2-1);
+        temp2[1] = s2.get(index2-2);
+        Arrays.sort(temp1);
+        Arrays.sort(temp2);
+        return Objects.equals(temp1[0], temp2[0]) && Objects.equals(temp1[1], temp2[1]);
+    }
+
+
+    /**
+     * 检查任意两道题目能否通过有限次交换+和×左右的算术表达式变换为同一道题目，可以则返回true，否则返回false
+     * 注：这两道题目均为经过逆波兰式处理后的表达式
+     * @param list1 题目1
+     * @param list2 题目2
+     * @return 是否相同
+     */
+    public static boolean duplicateCheck(List<String> list1,List<String> list2){
+        int len1 = list1.size();
+        int len2 = list2.size();
+        //只有两道题目的长度相等时，才有可能完全相同
+        if(len1!=len2){
+            return false;
+        }
+            for (int i = 0; i < len1; i++) {
+                //首先通过遍历字符串寻找到该题目的第一个运算符
+                if ((list1.get(i)).matches("[-+×÷]")) {
+                    //找到题目1的首个运算符后，记录这个运算符，开始寻找题目2的首个运算符
+                    String operator1 = list1.get(i);
+                    for (int j = 0; j < len2; j++) {
+                        //由于递归的特性，在已经判断出两题属于重复题目(即return true后)只能跳出内层循环，此时外层循环仍会继续，故在回到外层循环之后需要添加一个判断条件，如果此时满足则直接继续跳出循环
+                        if(list1.size()==1){
+                            return true;
+                        }
+                            if ((list2.get(j)).matches("[-+×÷]")) {
+                                String operator2 = list2.get(j);
+                                //如果两道经过逆波兰式处理后的题目的首个运算符不相同，那很明显两道题目不是重复的
+                                if (!Objects.equals(operator1, operator2)) {
+                                    return false;
+                                } else {
+                                    //若运算符相同，则比较运算符前的两个元素是否为同一组
+                                    if (!isDuplicate(list1, list2, i, j)) {
+                                        return false;
+                                    } else {
+                                        String operator = list1.get(i);
+                                        String result;
+                                        switch (operator) {
+                                            case "+":
+                                                result = plus(list1.get(i - 2), list1.get(i - 1));
+                                                for (int n = 0; n < 3; n++) {
+                                                    list1.remove(i - 2);
+                                                    list2.remove(j - 2);
+                                                }
+                                                list1.add(i - 2, result);
+                                                list2.add(j - 2, result);
+                                                break;
+                                            case "-":
+                                                result = minus(list1.get(i - 2), list1.get(i - 1));
+                                                for (int n = 0; n < 3; n++) {
+                                                    list1.remove(i - 2);
+                                                    list2.remove(j - 2);
+                                                }
+                                                list1.add(i - 2, result);
+                                                list2.add(j - 2, result);
+                                                break;
+                                            case "×":
+                                                result = multiply(list1.get(i - 2), list1.get(i - 1));
+                                                for (int n = 0; n < 3; n++) {
+                                                    list1.remove(i - 2);
+                                                    list2.remove(j - 2);
+                                                }
+                                                list1.add(i - 2, result);
+                                                list2.add(j - 2, result);
+                                                break;
+                                            case "÷":
+                                                result = divide(list1.get(i - 2), list1.get(i - 1));
+                                                for (int n = 0; n < 3; n++) {
+                                                    list1.remove(i - 2);
+                                                    list2.remove(j - 2);
+                                                }
+                                                list1.add(i - 2, result);
+                                                list2.add(j - 2, result);
+                                                break;
+                                        }
+                                        if (list1.size() == 1) {
+                                            return true;
+                                        } else {
+                                            duplicateCheck(list1, list2);
+                                        }
+                                    }
+                                }
+                            }
+                    }
+                }
+            }
+
+        return true;
     }
 
     /**
