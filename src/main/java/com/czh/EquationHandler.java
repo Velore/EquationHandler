@@ -5,6 +5,8 @@ import com.czh.utils.CalculateUtils;
 import com.czh.utils.EquationUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 主启动类
@@ -48,6 +50,10 @@ public class EquationHandler {
      */
     public static void start(String[] args){
         try{
+            List<String> argList = new ArrayList<>(Arrays.asList(args));
+            if(!argList.contains("-e") && !argList.contains("-r")){
+                throw new IllegalArgumentException("参数应包含'-e'或者'-r'其中一个");
+            }
             for(int i = 0;i<args.length-1;i++){
                 if("-n".equals(args[i])){
                     count = Integer.parseInt(args[i+1]);
@@ -63,7 +69,7 @@ public class EquationHandler {
                 }
             }
             for (String arg : args) {
-                if ("-n".equals(arg) || "-r".equals(arg)) {
+                if ("-r".equals(arg)) {
                     generateEquationAndAnswer(count, maxNum);
                     break;
                 }

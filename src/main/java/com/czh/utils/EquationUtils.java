@@ -117,7 +117,7 @@ public class EquationUtils {
     public static ArrayList<String> getLeftSubElement(int index, ArrayList<String> element){
         ArrayList<String> subElement = new ArrayList<>();
         while(index>=0){
-            if(!"+".equals(element.get(index).trim()) || !"-".equals(element.get(index).trim())){
+            if(!"+".equals(element.get(index).trim()) && !"-".equals(element.get(index).trim())){
                 if("(".equals(element.get(index))){
                     break;
                 }
@@ -149,7 +149,7 @@ public class EquationUtils {
     public static ArrayList<String> getRightSubElement(int index, ArrayList<String> element){
         ArrayList<String> subElement = new ArrayList<>();
         while(index< element.size()){
-            if(!"+".equals(element.get(index).trim()) || !"-".equals(element.get(index).trim())){
+            if(!"+".equals(element.get(index).trim()) && !"-".equals(element.get(index).trim())){
                 if(")".equals(element.get(index))){
                     break;
                 }
@@ -169,30 +169,6 @@ public class EquationUtils {
         }
         return subElement;
     }
-
-//    /**
-//     * 注:该方法无法处理减法小于0和除法除以0同时存在的情况,故废弃
-//     * 检查元素list中的除法
-//     * 防止结果的分母为0导致计算出现NaN
-//     * @param list 要检查的算式
-//     */
-//    @Deprecated
-//    public static void checkDivide(ArrayList<String> list){
-//        int index;
-//        for(index = 0;index<list.size();index++){
-//            ArrayList<String> rightList = new ArrayList<>();
-//            if("÷".equals(list.get(index).trim())){
-//                rightList = getRightSubElement(index+1, list);
-//                if(rightList.contains(" ÷ ")){
-//                    checkDivide(rightList);
-//                }
-//                if("0".equals(CalculateUtils.calculate(transformToEquation(rightList)))){
-//                    list.set(index, " × ");
-//                    break;
-//                }
-//            }
-//        }
-//    }
 
     /**
      * 将元素list转换为可计算的算式String
@@ -257,22 +233,4 @@ public class EquationUtils {
         equation.setAnswer(result);
         return equation;
     }
-
-//    /**
-//     * 检测两个算式是否相同
-//     * @param e Equation
-//     * @return 相同返回true
-//     */
-//    public boolean duplicateCheck(Equation e, HashMap<Integer, String> hashList){
-//        int equationHash;
-//        for(int i = 0;i<e.getElementList().size();i++){
-//            if("+".equals(e.getElementList().get(i).trim())|| "×".equals(e.getElementList().get(i).trim())){
-//                ArrayList<String> left = EquationUtils.getLeftSubElement(i-1, e.getElementList());
-//                ArrayList<String> right = EquationUtils.getRightSubElement(i+1, e.getElementList());
-//
-//            }
-//        }
-//        return false;
-//    }
-
 }
