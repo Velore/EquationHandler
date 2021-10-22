@@ -5,9 +5,7 @@ import com.czh.utils.EquationUtils;
 import com.czh.utils.RandomUtils;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author chenzhuohong
@@ -91,7 +89,7 @@ public class CalculateUtilsTest {
         System.out.println(CalculateUtils.divide("1'2/3", "2'5/7"));
 
     }
-
+  
     @Test
     public void duplicateCheckTestTrue(){
         List<String> l1 = new ArrayList<>();

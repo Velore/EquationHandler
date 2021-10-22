@@ -4,6 +4,11 @@ import org.junit.Test;
 public class EquationHandlerTest {
 
     @Test
+    public void generatorTest(){
+        EquationHandler.generator(100000, 10);
+    }
+
+    @Test
     public void generateEquationAndAnswerTest(){
         EquationHandler.generateEquationAndAnswer(10000, 10);
     }
