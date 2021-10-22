@@ -39,6 +39,7 @@ public class ElementUtils {
             }
             return nums;
         }catch (Exception e){
+            System.out.println("arg:"+s);
             e.printStackTrace();
         }
         return nums;
@@ -50,9 +51,15 @@ public class ElementUtils {
      * @return 最简分数的表达式
      */
     public static String simplifyFraction(String s){
-        int[] result = ElementUtils.splitFraction(s);
-        if((result[0]%result[1])==0){
-            return String.valueOf(result[0]/result[1]);
+        int[] result = new int[2];
+        try{
+            result = ElementUtils.splitFraction(s);
+            if((result[0]%result[1])==0){
+                return String.valueOf(result[0]/result[1]);
+            }
+        }catch (Exception e){
+            System.out.println("arg:"+s);
+            e.printStackTrace();
         }
         //计算分子和分母的最大公约数
         int maxFactor = CalculateUtils.getMaxFactor(result[0], result[1]);

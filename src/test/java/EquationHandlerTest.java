@@ -4,8 +4,13 @@ import org.junit.Test;
 public class EquationHandlerTest {
 
     @Test
+    public void generatorTest(){
+        EquationHandler.generator(100000, 10);
+    }
+
+    @Test
     public void generateEquationAndAnswerTest(){
-        EquationHandler.generateEquationAndAnswer(100, 10);
+        EquationHandler.generateEquationAndAnswer(10000, 10);
     }
 
     @Test
@@ -17,7 +22,7 @@ public class EquationHandlerTest {
     public void mainTest(){
         String[] input = new String[4];
         input[0] = "-n";
-        input[1] = "20";
+        input[1] = "10000";
         input[2] = "-r";
         input[3] = "20";
         EquationHandler.main(input);

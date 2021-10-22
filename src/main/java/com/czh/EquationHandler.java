@@ -2,10 +2,12 @@ package com.czh;
 
 import com.czh.utils.AccessUtils;
 import com.czh.utils.CalculateUtils;
+import com.czh.utils.DuplicateUtils;
 import com.czh.utils.EquationUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -37,7 +39,7 @@ public class EquationHandler {
     /**
      * 算式中最大的整数
      */
-    public static int maxNum = 10;
+    public static int maxNum;
 
     /**
      * 算式list
@@ -50,9 +52,11 @@ public class EquationHandler {
      */
     public static void start(String[] args){
         try{
+            String str = "参数应包含'-e'或者'-r'其中一个\n若为生成算式和答案,使用-r指定算式的最大整数,-n指定生成算式的数量,若不输入-n,则默认生成10条算式\n" +
+                    "若为检查题目答案的正确率,使用-e指定算式的路径,使用-a指定答案的路径,两者缺一不可";
             List<String> argList = new ArrayList<>(Arrays.asList(args));
             if(!argList.contains("-e") && !argList.contains("-r")){
-                throw new IllegalArgumentException("参数应包含'-e'或者'-r'其中一个");
+                throw new IllegalArgumentException(str);
             }
             for(int i = 0;i<args.length-1;i++){
                 if("-n".equals(args[i])){
@@ -72,9 +76,10 @@ public class EquationHandler {
                 if ("-r".equals(arg)) {
                     generateEquationAndAnswer(count, maxNum);
                     break;
+                }else if("-e".equals(arg)){
+                    checkAnswer(EXERCISES_PATH, ANSWER_PATH);
+                    break;
                 }
-                checkAnswer(EXERCISES_PATH, ANSWER_PATH);
-                break;
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -88,31 +93,30 @@ public class EquationHandler {
      * @return 算式list
      */
     public static ArrayList<Equation> generator(int count, int maxNum){
+        //用于鉴别算式是否重复的HashMap
+        HashMap<String, String> eList = new HashMap<>(2*count);
         ArrayList<Equation> list = new ArrayList<>();
         //因为题库初始化后是空的，所以首先生成一道题目并放入题库中
         Equation equation = EquationUtils.buildEquation(maxNum);
         list.add(equation);
-
+        eList.put(equation.getAnswer(), equation.toString());
+        System.out.println(list.size() + ":" + equation);
         for(int i = 1;i<count; i++){
-            //新生成一道题目
-            Equation equation1 = EquationUtils.buildEquation(maxNum);
-            //取出其表达式转换为list
-            List<String> list1 = EquationUtils.transformStringToList(CalculateUtils.getPolishNotation(equation1.toString()));
-            //取出已经存放在题库中的每道题目一一进行比对
-            for(int j = 0;j<list.size();j++){
-                    List<String> list2 = EquationUtils.transformStringToList(CalculateUtils.getPolishNotation(list.get(j).toString()));
-                    boolean isDuplicate = CalculateUtils.duplicateCheck(list1,list2);
-                    //如果已经判断至题库中的最后一道题目，且这两道题目不重复的话，则将该题目加入题库
-                    if(!isDuplicate&&j==list.size()-1){
-                        list.add(equation1);
-                        break;
-                    //如果发现两道题目重复，则直接跳出比对的循环，新生成一道题目
-                    }else if(isDuplicate){
-                        i--;
-                        break;
-                    }
-            }
-
+            boolean isDuplicate;
+            Equation newEquation;
+            do{
+                //新生成一道题目
+                newEquation = EquationUtils.buildEquation(maxNum);
+                //取出已经存放在题库中的每道题目一一进行比对
+                if(eList.containsKey(newEquation.getAnswer())){
+                    isDuplicate = DuplicateUtils.duplicateCheck(newEquation.toString(), eList.get(newEquation.getAnswer()));
+                }else{
+                    isDuplicate = false;
+                }
+            }while (isDuplicate);
+            list.add(newEquation);
+            eList.put(newEquation.getAnswer(), newEquation.toString());
+            System.out.println(list.size() + ":" + newEquation);
         }
         return list;
     }
