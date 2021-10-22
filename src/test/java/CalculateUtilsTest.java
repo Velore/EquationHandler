@@ -98,11 +98,11 @@ public class CalculateUtilsTest {
         l1.add("1/2");
         l1.add("2");
         l1.add("3");
-        l1.add("×");
+        l1.add("÷");
         l1.add("+");
         l2.add("2");
         l2.add("3");
-        l2.add("×");
+        l2.add("÷");
         l2.add("1/2");
         l2.add("+");
         System.out.println(l1);
@@ -123,6 +123,27 @@ public class CalculateUtilsTest {
         l2.add("2");
         l2.add("3");
         l2.add("-");
+        l2.add("1/2");
+        l2.add("+");
+        System.out.println(l1);
+        System.out.println(l2);
+        boolean result = CalculateUtils.duplicateCheck(l1,l2);
+        System.out.println(result);
+    }
+
+    @Test
+    public void duplicateCheckTestDivideFalse(){
+        //比起第一个测试类，更换了除数和被除数的顺序
+        List<String> l1 = new ArrayList<>();
+        List<String> l2 = new ArrayList<>();
+        l1.add("1/2");
+        l1.add("3");
+        l1.add("2");
+        l1.add("÷");
+        l1.add("+");
+        l2.add("2");
+        l2.add("3");
+        l2.add("÷");
         l2.add("1/2");
         l2.add("+");
         System.out.println(l1);

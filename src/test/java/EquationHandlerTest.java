@@ -5,7 +5,7 @@ public class EquationHandlerTest {
 
     @Test
     public void generateEquationAndAnswerTest(){
-        EquationHandler.generateEquationAndAnswer(10, 10);
+        EquationHandler.generateEquationAndAnswer(100, 10);
     }
 
     @Test
