@@ -157,86 +157,84 @@ public class CalculateUtils {
      * @return 是否相同
      */
     public static boolean duplicateCheck(List<String> list1,List<String> list2){
-        int len1 = list1.size();
-        int len2 = list2.size();
         //只有两道题目的长度相等时，才有可能为两道重复的题目
-        if(len1!=len2){
+        if(list1.size()!=list2.size()){
             return false;
         }
-            for (int i = 0; i < len1; i++) {
+                for (int i = 0; i < list1.size(); i++) {
                 //首先通过遍历字符串寻找到该题目的第一个运算符
                 if ((list1.get(i)).matches("[-+×÷]")) {
                     //找到题目1的首个运算符后，记录这个运算符，开始寻找题目2的首个运算符
                     String operator1 = list1.get(i);
-                    for (int j = 0; j < len2; j++) {
+                    for (int j = 0; j < list2.size(); j++) {
                         //由于递归的特性，在已经判断出两题属于重复题目(即return true后)只能跳出内层循环，此时外层循环仍会继续，故在回到外层循环之后需要添加一个判断条件，如果此时满足则直接继续跳出循环
                         if(list1.size()==1){
                             return true;
                         }
-                            if ((list2.get(j)).matches("[-+×÷]")) {
-                                //第二层遍历，用于找到第二道题目的首个运算符并记录
-                                String operator2 = list2.get(j);
-                                //如果两道经过逆波兰式处理后的题目的首个运算符不相同，那很明显两道题目不是重复的
-                                if (!Objects.equals(operator1, operator2)) {
+                        if ((list2.get(j)).matches("[-+×÷]")) {
+                            //第二层遍历，用于找到第二道题目的首个运算符并记录
+                            String operator2 = list2.get(j);
+                            //如果两道经过逆波兰式处理后的题目的首个运算符不相同，那很明显两道题目不是重复的
+                            if (!Objects.equals(operator1, operator2)) {
+                                return false;
+                            } else {
+                                //若运算符相同，则比较运算符前的两个元素是否为同一组
+                                if (!isDuplicate(list1, list2, i, j,operator1)) {
                                     return false;
                                 } else {
-                                    //若运算符相同，则比较运算符前的两个元素是否为同一组
-                                    if (!isDuplicate(list1, list2, i, j,operator1)) {
-                                        return false;
+                                    //如果经过检查后，两个题目的运算符和它们自己的两个运算数都是重复的，那么首先根据运算符计算结果，计算完毕后将运算符和这两个运算数一起移出list中，并将运算结果add进被移除的位置
+                                    //例： [1,2,3,+,×]->经过检查后不重复->求出2+3=5->将2,3,＋三个元素移除，并将结果5填入->list变成[1,5,×]
+                                    String operator = list1.get(i);
+                                    String result;
+                                    //根据符号寻找对应的运算规则
+                                    switch (operator) {
+                                        case "+":
+                                            result = plus(list1.get(i - 2), list1.get(i - 1));
+                                            for (int n = 0; n < 3; n++) {
+                                                list1.remove(i - 2);
+                                                list2.remove(j - 2);
+                                            }
+                                            list1.add(i - 2, result);
+                                            list2.add(j - 2, result);
+                                            break;
+                                        case "-":
+                                            result = minus(list1.get(i - 2), list1.get(i - 1));
+                                            for (int n = 0; n < 3; n++) {
+                                                list1.remove(i - 2);
+                                                list2.remove(j - 2);
+                                            }
+                                            list1.add(i - 2, result);
+                                            list2.add(j - 2, result);
+                                            break;
+                                        case "×":
+                                            result = multiply(list1.get(i - 2), list1.get(i - 1));
+                                            for (int n = 0; n < 3; n++) {
+                                                list1.remove(i - 2);
+                                                list2.remove(j - 2);
+                                            }
+                                            list1.add(i - 2, result);
+                                            list2.add(j - 2, result);
+                                            break;
+                                        case "÷":
+                                            result = divide(list1.get(i - 2), list1.get(i - 1));
+                                            for (int n = 0; n < 3; n++) {
+                                                list1.remove(i - 2);
+                                                list2.remove(j - 2);
+                                            }
+                                            list1.add(i - 2, result);
+                                            list2.add(j - 2, result);
+                                            break;
+                                    }
+                                    //如果list的size为1，说明所有的运算符都已被消除，此时可以确定两道题是重复的
+                                    if (list1.size() == 1) {
+                                        return true;
                                     } else {
-                                        //如果经过检查后，两个题目的运算符和它们自己的两个运算数都是重复的，那么首先根据运算符计算结果，计算完毕后将运算符和这两个运算数一起移出list中，并将运算结果add进被移除的位置
-                                        //例： [1,2,3,+,×]->经过检查后不重复->求出2+3=5->将2,3,＋三个元素移除，并将结果5填入->list变成[1,5,×]
-                                        String operator = list1.get(i);
-                                        String result;
-                                        //根据符号寻找对应的运算规则
-                                        switch (operator) {
-                                            case "+":
-                                                result = plus(list1.get(i - 2), list1.get(i - 1));
-                                                for (int n = 0; n < 3; n++) {
-                                                    list1.remove(i - 2);
-                                                    list2.remove(j - 2);
-                                                }
-                                                list1.add(i - 2, result);
-                                                list2.add(j - 2, result);
-                                                break;
-                                            case "-":
-                                                result = minus(list1.get(i - 2), list1.get(i - 1));
-                                                for (int n = 0; n < 3; n++) {
-                                                    list1.remove(i - 2);
-                                                    list2.remove(j - 2);
-                                                }
-                                                list1.add(i - 2, result);
-                                                list2.add(j - 2, result);
-                                                break;
-                                            case "×":
-                                                result = multiply(list1.get(i - 2), list1.get(i - 1));
-                                                for (int n = 0; n < 3; n++) {
-                                                    list1.remove(i - 2);
-                                                    list2.remove(j - 2);
-                                                }
-                                                list1.add(i - 2, result);
-                                                list2.add(j - 2, result);
-                                                break;
-                                            case "÷":
-                                                result = divide(list1.get(i - 2), list1.get(i - 1));
-                                                for (int n = 0; n < 3; n++) {
-                                                    list1.remove(i - 2);
-                                                    list2.remove(j - 2);
-                                                }
-                                                list1.add(i - 2, result);
-                                                list2.add(j - 2, result);
-                                                break;
-                                        }
-                                        //如果list的size为1，说明所有的运算符都已被消除，此时可以确定两道题是重复的
-                                        if (list1.size() == 1) {
-                                            return true;
-                                        } else {
-                                            //否则，递归进行下一个运算符的检查
-                                            duplicateCheck(list1, list2);
-                                        }
+                                        //否则，递归进行下一个运算符的检查
+                                        duplicateCheck(list1, list2);
                                     }
                                 }
                             }
+                        }
                     }
                 }
             }

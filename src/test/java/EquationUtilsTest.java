@@ -54,7 +54,7 @@ public class EquationUtilsTest {
 
     @Test
     public void buildEquationTest2(){
-        for(int i = 0;i<1000;i++){
+        for(int i = 0;i<10000;i++){
             Equation equation = EquationUtils.buildEquation(10);
             System.out.println((i+1)+". "+equation + "->" +equation.getAnswer());
         }

@@ -151,4 +151,24 @@ public class CalculateUtilsTest {
         boolean result = CalculateUtils.duplicateCheck(l1,l2);
         System.out.println(result);
     }
+
+    @Test
+    public void duplicateCheckTestException(){
+        List<String> l1 = new ArrayList<>();
+        List<String> l2 = new ArrayList<>();
+        l1.add("6");
+        l1.add("9");
+        l1.add("5");
+        l1.add("×");
+        l1.add("+");
+        l2.add("5");
+        l2.add("5");
+        l2.add("5");
+        l2.add("×");
+        l2.add("+");
+        System.out.println(l1);
+        System.out.println(l2);
+        boolean result = CalculateUtils.duplicateCheck(l1,l2);
+        System.out.println(result);
+    }
 }
