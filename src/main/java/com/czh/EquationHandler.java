@@ -89,8 +89,30 @@ public class EquationHandler {
      */
     public static ArrayList<Equation> generator(int count, int maxNum){
         ArrayList<Equation> list = new ArrayList<>();
-        for(int i = 0;i<count; i++){
-            list.add(EquationUtils.buildEquation(maxNum));
+        //因为题库初始化后是空的，所以首先生成一道题目并放入题库中
+        Equation equation = EquationUtils.buildEquation(maxNum);
+        list.add(equation);
+
+        for(int i = 1;i<count; i++){
+            //新生成一道题目
+            Equation equation1 = EquationUtils.buildEquation(maxNum);
+            //取出其表达式转换为list
+            List<String> list1 = EquationUtils.transformStringToList(CalculateUtils.getPolishNotation(equation1.toString()));
+            //取出已经存放在题库中的每道题目一一进行比对
+            for(int j = 0;j<list.size();j++){
+                    List<String> list2 = EquationUtils.transformStringToList(CalculateUtils.getPolishNotation(list.get(j).toString()));
+                    boolean isDuplicate = CalculateUtils.duplicateCheck(list1,list2);
+                    //如果已经判断至题库中的最后一道题目，且这两道题目不重复的话，则将该题目加入题库
+                    if(!isDuplicate&&j==list.size()-1){
+                        list.add(equation1);
+                        break;
+                    //如果发现两道题目重复，则直接跳出比对的循环，新生成一道题目
+                    }else if(isDuplicate){
+                        i--;
+                        break;
+                    }
+            }
+
         }
         return list;
     }

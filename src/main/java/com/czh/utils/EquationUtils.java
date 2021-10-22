@@ -107,9 +107,32 @@ public class EquationUtils {
     }
 
     /**
-     * 获取算式元素中的左运算数(左子算式);
-     * 如: a-b获取a, 此时a可以是任何复杂的运算数(子算式);
-     * 如: (a*b+c)-d, 该方法返回(a*b+c);
+     * 在进行逆波兰表达式处理后，将处理后的字符串转换为List
+     * @param s 题目String
+     * @return 处理后的题目list
+     */
+    public static List<String> transformStringToList(String s){
+        ArrayList<String> list = new ArrayList<>();
+        //遍历该表达式
+        for(int i = 0;i<s.length();i++){
+            //如果当前位不为"|"(分隔符)，则将当前位字符拼接入StringBuilder中，直到遇到下一个分隔符
+            if(!"|".equals(s.charAt(i)+"")){
+                StringBuilder builder = new StringBuilder();
+                do{
+                    builder.append(s.charAt(i));
+                    i++;
+                }while (i<s.length() && !"|".equals(s.charAt(i)+""));
+                //将分隔符内的元素存入list中
+                list.add(builder.toString());
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 获取算式元素中的左运算数(左子算式)
+     * 如: a-b获取a, 此时a可以是任何复杂的运算数(子算式)
+     * 如: (a*b+c)-d, 该方法返回(a*b+c)
      * @param index 算式元素中运算符左边第一位字符的下标
      * @param element 算式的元素list
      * @return 元素或子算式list
