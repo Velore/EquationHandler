@@ -21,7 +21,7 @@ public class CalculateUtils {
         ArrayList<String> list = new ArrayList<>();
         //用于存储运算符
         Stack<String> stack = new Stack<>();
-        //s.length()-1是为了去掉方程末尾的"="
+        //s.length()-1是为了去掉算式末尾的"="
         for (int i=0;i<s.length()-1;){
             if (ElementUtils.isInteger(s.charAt(i)+"")){
                 //匹配运算数
@@ -38,7 +38,7 @@ public class CalculateUtils {
                     i++;
                     continue;
                 }
-                //上一个元素不为"(", 且当前运算符优先级小于上一个元素, 则将比这个运算符优先级大的元素全部加入到队列中
+                //上一个元素不为"(", 且当前运算符优先级小于上一个元素, 则将比这个运算符优先级大的其余运算符全部加入到队列中
                 while (!stack.isEmpty()&&
                         !("(").equals(stack.lastElement())&&
                         !ElementUtils.comparePriority(s.charAt(i)+"",stack.lastElement())){
@@ -64,6 +64,7 @@ public class CalculateUtils {
         while (!stack.isEmpty()){
             list.add(stack.pop());
         }
+        //"|"为元素分隔符
         //用"|"将逆波兰式中运算数和运算符分割开,便于后续有关String的处理
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i<list.size(); i++){
@@ -90,10 +91,10 @@ public class CalculateUtils {
                 if ((s.charAt(i) + "").matches("\\d")){
                     // 运算数的处理
                     StringBuilder builder = new StringBuilder();
-                    //除了运算符以外的字符都是运算数
                     do{
                         builder.append(s.charAt(i));
                         i++;
+                        //匹配到运算符或者到达逆波兰式的字符串尾部就说明匹配完成该运算数
                     }while (i<s.length() && !ElementUtils.isOperator(s.charAt(i)));
                     stack.push(builder.toString());
                 }else if ((s.charAt(i) + "").matches("[-+×÷]")){
@@ -110,7 +111,7 @@ public class CalculateUtils {
                     stack.push(res);
                     i++;
                 }else if("|".equals(s.charAt(i)+"")){
-                    //对分隔符不做处理
+                    //对逆波兰式中加入的元素分隔符不做处理
                     i++;
                 }
             }
@@ -278,10 +279,11 @@ public class CalculateUtils {
      * @return 运算结果 String
      */
     public static String simpleCalculate(String m, String n, String o){
-        //两个运算数中出现一个NaN,计算结果为NaN
+        //两个运算数中出现一个NaN,计算结果为NaN,直接返回
         if("NaN".equals(m) || "NaN".equals(n)){
             return "NaN";
         }
+        //根据传入的运算符,执行对应的简单四则运算
         switch (o){
             case "+":
                 return plus(m, n);
